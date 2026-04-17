@@ -1,6 +1,7 @@
+
 ---
 - name: Anzeigen der Systemprozesse auf Debian
-  hosts: debian_servers
+  hosts: "{{ target_hosts | default('all') }}"
   become: yes
   gather_facts: no
 
@@ -8,7 +9,8 @@
     - name: Laufende Prozesse anzeigen
       ansible.builtin.command: ps aux
       register: process_list
+      changed_when: false
 
     - name: Prozesse ausgeben
       ansible.builtin.debug:
-        msg: "{{ process_list.stdout_lines }}"
+        var: process_list.stdout_lines
